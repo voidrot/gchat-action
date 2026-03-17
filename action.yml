@@ -1,23 +1,62 @@
-name: The name of your action here
-description: Provide a description here
-author: Your name or organization here
+name: 'Google Chat Action'
+description: 'Send feature-rich messages to Google Chat from GitHub Actions'
+author: 'voidrot'
 
 # Add your action's branding here. This will appear on the GitHub Marketplace.
 branding:
-  icon: heart
-  color: red
+  icon: message-square
+  color: green
 
 # Define your inputs here.
 inputs:
-  milliseconds:
-    description: Your input description here
+  webhook_url:
+    description: 'Webhook URL from Google Chat space'
     required: true
-    default: '1000'
+  message_type:
+    description:
+      'Target message to build (auto, workflow_status, deployment_status,
+      pull_request, issue, custom)'
+    required: true
+    default: 'auto'
+  status:
+    description: 'The status (success, failure, cancelled, etc.)'
+    required: false
+  custom_text:
+    description: 'Additional text to include with the message (works with all message types)'
+    required: false
+  custom_cards_v2:
+    description: 'Cards v2 JSON string'
+    required: false
+  thread_key:
+    description: 'Thread key overrides'
+    required: false
+  disable_threading:
+    description: 'Switch to disable threading entirely'
+    required: false
+    default: 'false'
+  card_title:
+    description: 'Card header title (custom message type)'
+    required: false
+  card_subtitle:
+    description: 'Card header subtitle (custom message type)'
+    required: false
+  card_image_url:
+    description: 'Card header image URL (custom message type)'
+    required: false
+  card_text:
+    description: 'Card body text paragraph (custom message type)'
+    required: false
+  card_button_text:
+    description: 'Card button label (custom message type)'
+    required: false
+  card_button_url:
+    description: 'Card button URL (custom message type)'
+    required: false
 
 # Define your outputs here.
 outputs:
   time:
-    description: Your output description here
+    description: 'The time we sent the message'
 
 runs:
   using: node24
