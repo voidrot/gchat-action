@@ -59,7 +59,7 @@ jobs:
         with:
           webhook_url: ${{ secrets.WEBHOOK_URL }}
           status: success
-          custom_text: "Test message from GitHub Actions"
+          custom_text: 'Test message from GitHub Actions'
 
       - name: Print Output
         id: output
