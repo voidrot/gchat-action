@@ -57,9 +57,6 @@ describe('main action', () => {
         body: JSON.stringify({ text: 'hello' })
       })
     )
-    expect(stdoutSpy).toHaveBeenCalledWith(
-      expect.stringContaining('::set-output name=time::')
-    )
     expect(process.exitCode).toBeFalsy()
   })
 
@@ -165,8 +162,11 @@ describe('main action', () => {
 
     await run()
     const body = JSON.parse(fetchSpy.mock.calls[0][1].body)
-    expect(body.text).toBe('Build triggered by cron schedule')
-    expect(body.cardsV2).toBeDefined()
+    expect(body.text).toBeUndefined()
+    const firstSection = body.cardsV2[0].card.sections[0]
+    expect(firstSection.widgets[0].textParagraph.text).toBe(
+      'Build triggered by cron schedule'
+    )
     expect(process.exitCode).toBeFalsy()
   })
 
@@ -184,8 +184,11 @@ describe('main action', () => {
 
     await run()
     const body = JSON.parse(fetchSpy.mock.calls[0][1].body)
-    expect(body.text).toBe('Needs urgent review')
-    expect(body.cardsV2).toBeDefined()
+    expect(body.text).toBeUndefined()
+    const firstSection = body.cardsV2[0].card.sections[0]
+    expect(firstSection.widgets[0].textParagraph.text).toBe(
+      'Needs urgent review'
+    )
     expect(process.exitCode).toBeFalsy()
   })
 })

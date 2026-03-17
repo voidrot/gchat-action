@@ -60602,7 +60602,7 @@ async function sendMessage(webhookUrl, payload, threadKey, disableThreading) {
     }
 }
 
-function buildCustomMessage(text, cardsV2) {
+function buildCustomMessage(text, cardsV2, cardFields) {
     const payload = {};
     if (text) {
         payload.text = text;
@@ -60614,8 +60614,57 @@ function buildCustomMessage(text, cardsV2) {
         catch (e) {
             throw new Error(`Failed to parse custom_cards_v2 JSON: ${e.message}`, { cause: e });
         }
+        return payload;
+    }
+    if (cardFields && hasAnyCardField(cardFields)) {
+        payload.cardsV2 = [buildCardFromFields(cardFields)];
     }
     return payload;
+}
+function hasAnyCardField(fields) {
+    return !!(fields.title ||
+        fields.subtitle ||
+        fields.imageUrl ||
+        fields.text ||
+        fields.buttonText ||
+        fields.buttonUrl);
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function buildCardFromFields(fields) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const header = {};
+    if (fields.title)
+        header.title = fields.title;
+    if (fields.subtitle)
+        header.subtitle = fields.subtitle;
+    if (fields.imageUrl) {
+        header.imageUrl = fields.imageUrl;
+        header.imageType = 'CIRCLE';
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const widgets = [];
+    if (fields.text) {
+        widgets.push({ textParagraph: { text: fields.text } });
+    }
+    if (fields.buttonText && fields.buttonUrl) {
+        widgets.push({
+            buttonList: {
+                buttons: [
+                    {
+                        text: fields.buttonText,
+                        onClick: { openLink: { url: fields.buttonUrl } }
+                    }
+                ]
+            }
+        });
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const card = {};
+    if (Object.keys(header).length > 0)
+        card.header = header;
+    if (widgets.length > 0)
+        card.sections = [{ widgets }];
+    return { cardId: 'custom_card', card };
 }
 
 function buildWorkflowStatusMessage(statusInput) {
@@ -60895,6 +60944,12 @@ async function run() {
         const status = getInput('status');
         const customText = getInput('custom_text');
         const customCardsV2 = getInput('custom_cards_v2');
+        const cardTitle = getInput('card_title');
+        const cardSubtitle = getInput('card_subtitle');
+        const cardImageUrl = getInput('card_image_url');
+        const cardText = getInput('card_text');
+        const cardButtonText = getInput('card_button_text');
+        const cardButtonUrl = getInput('card_button_url');
         const disableThreadingInput = getInput('disable_threading');
         const disableThreading = disableThreadingInput === 'true';
         let threadKey = getInput('thread_key');
@@ -60920,10 +60975,27 @@ async function run() {
                 payload = buildIssueMessage();
                 break;
             case 'custom':
-                payload = buildCustomMessage(customText, customCardsV2);
+                payload = buildCustomMessage(customText, customCardsV2, {
+                    title: cardTitle || undefined,
+                    subtitle: cardSubtitle || undefined,
+                    imageUrl: cardImageUrl || undefined,
+                    text: cardText || undefined,
+                    buttonText: cardButtonText || undefined,
+                    buttonUrl: cardButtonUrl || undefined
+                });
                 break;
             default:
                 throw new Error(`Unsupported message_type: ${messageType}`);
+        }
+        // Allow custom_text on any message type (custom type handles it internally)
+        // Google Chat webhooks ignore top-level `text` when cardsV2 is present,
+        // so we inject it as a textParagraph widget inside the card.
+        if (customText && messageType !== 'custom' && payload.cardsV2?.length) {
+            const card = payload.cardsV2[0].card;
+            const customSection = {
+                widgets: [{ textParagraph: { text: customText } }]
+            };
+            card.sections = [customSection, ...(card.sections || [])];
         }
         await sendMessage(webhookUrl, payload, threadKey, disableThreading);
         setOutput('time', new Date().toTimeString());

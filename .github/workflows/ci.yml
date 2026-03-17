@@ -57,7 +57,9 @@ jobs:
         id: test-action
         uses: ./
         with:
-          milliseconds: 2000
+          webhook_url: ${{ secrets.WEBHOOK_URL }}
+          status: success
+          custom_text: 'Test message from GitHub Actions'
 
       - name: Print Output
         id: output
