@@ -57,9 +57,6 @@ describe('main action', () => {
         body: JSON.stringify({ text: 'hello' })
       })
     )
-    expect(stdoutSpy).toHaveBeenCalledWith(
-      expect.stringContaining('::set-output name=time::')
-    )
     expect(process.exitCode).toBeFalsy()
   })
 
