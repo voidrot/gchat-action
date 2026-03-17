@@ -92,12 +92,12 @@ jobs:
 Automatically selects the best message format based on the triggering GitHub
 event:
 
-| Event | Message Type |
-| --- | --- |
-| `deployment`, `deployment_status` | Deployment status |
-| `pull_request`, `pull_request_target`, `pull_request_review`, `pull_request_review_comment` | Pull request |
-| `issues`, `issue_comment` | Issue |
-| All other events | Workflow status |
+| Event                                                                                       | Message Type      |
+| ------------------------------------------------------------------------------------------- | ----------------- |
+| `deployment`, `deployment_status`                                                           | Deployment status |
+| `pull_request`, `pull_request_target`, `pull_request_review`, `pull_request_review_comment` | Pull request      |
+| `issues`, `issue_comment`                                                                   | Issue             |
+| All other events                                                                            | Workflow status   |
 
 ```yaml
 - name: Notify Chat
@@ -164,9 +164,9 @@ For full control, pass raw Cards v2 JSON instead:
 
 ### Threading
 
-By default, messages within the same workflow run are threaded together using the
-run ID as the thread key. This keeps related notifications grouped in your Google
-Chat space.
+By default, messages within the same workflow run are threaded together using
+the run ID as the thread key. This keeps related notifications grouped in your
+Google Chat space.
 
 ```yaml
 # Use a custom thread key
@@ -199,45 +199,44 @@ it to add extra context alongside any card message:
     webhook_url: ${{ secrets.GCHAT_WEBHOOK_URL }}
     message_type: 'workflow_status'
     status: ${{ job.status }}
-    custom_text: 'Triggered by ${{ github.event_name }} on ${{ github.ref_name }}'
+    custom_text:
+      'Triggered by ${{ github.event_name }} on ${{ github.ref_name }}'
 ```
 
 The text appears alongside the card in the Google Chat message.
 
 ## Inputs
 
-| Name | Description | Required | Default |
-| --- | --- | --- | --- |
-| `webhook_url` | Webhook URL from Google Chat space | Yes | — |
-| `message_type` | Message format (`auto`, `workflow_status`, `deployment_status`, `pull_request`, `issue`, `custom`) | Yes | `auto` |
-| `status` | Status string (e.g. `success`, `failure`, `cancelled`) | No | — |
-| `custom_text` | Additional text to include with the message (works with all message types) | No | — |
-| `custom_cards_v2` | Cards v2 JSON string (used with `custom` message type) | No | — |
-| `card_title` | Card header title (used with `custom` message type) | No | — |
-| `card_subtitle` | Card header subtitle (used with `custom` message type) | No | — |
-| `card_image_url` | Card header image URL (used with `custom` message type) | No | — |
-| `card_text` | Card body text paragraph (used with `custom` message type) | No | — |
-| `card_button_text` | Card button label (used with `custom` message type) | No | — |
-| `card_button_url` | Card button URL (used with `custom` message type) | No | — |
-| `thread_key` | Thread key override. Defaults to the workflow run ID | No | Run ID |
-| `disable_threading` | Set to `'true'` to disable threading entirely | No | `false` |
+| Name                | Description                                                                                        | Required | Default |
+| ------------------- | -------------------------------------------------------------------------------------------------- | -------- | ------- |
+| `webhook_url`       | Webhook URL from Google Chat space                                                                 | Yes      | —       |
+| `message_type`      | Message format (`auto`, `workflow_status`, `deployment_status`, `pull_request`, `issue`, `custom`) | Yes      | `auto`  |
+| `status`            | Status string (e.g. `success`, `failure`, `cancelled`)                                             | No       | —       |
+| `custom_text`       | Additional text to include with the message (works with all message types)                         | No       | —       |
+| `custom_cards_v2`   | Cards v2 JSON string (used with `custom` message type)                                             | No       | —       |
+| `card_title`        | Card header title (used with `custom` message type)                                                | No       | —       |
+| `card_subtitle`     | Card header subtitle (used with `custom` message type)                                             | No       | —       |
+| `card_image_url`    | Card header image URL (used with `custom` message type)                                            | No       | —       |
+| `card_text`         | Card body text paragraph (used with `custom` message type)                                         | No       | —       |
+| `card_button_text`  | Card button label (used with `custom` message type)                                                | No       | —       |
+| `card_button_url`   | Card button URL (used with `custom` message type)                                                  | No       | —       |
+| `thread_key`        | Thread key override. Defaults to the workflow run ID                                               | No       | Run ID  |
+| `disable_threading` | Set to `'true'` to disable threading entirely                                                      | No       | `false` |
 
 ## Outputs
 
-| Name   | Description                         |
-| ------ | ----------------------------------- |
-| `time` | The time the message was sent       |
+| Name   | Description                   |
+| ------ | ----------------------------- |
+| `time` | The time the message was sent |
 
 ## Setup
 
 1. In your Google Chat space, create an incoming webhook
    ([docs](https://developers.google.com/workspace/chat/create-webhooks))
 2. Copy the webhook URL
-3. Add the URL as a repository or organization secret (e.g.
-   `GCHAT_WEBHOOK_URL`)
+3. Add the URL as a repository or organization secret (e.g. `GCHAT_WEBHOOK_URL`)
 4. Reference the secret in your workflow as shown in the examples above
 
 ## License
 
-This project is licensed under the terms of the
-[MIT License](./LICENSE).
+This project is licensed under the terms of the [MIT License](./LICENSE).

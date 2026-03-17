@@ -22,7 +22,9 @@ inputs:
     description: 'The status (success, failure, cancelled, etc.)'
     required: false
   custom_text:
-    description: 'Additional text to include with the message (works with all message types)'
+    description:
+      'Additional text to include with the message (works with all message
+      types)'
     required: false
   custom_cards_v2:
     description: 'Cards v2 JSON string'

@@ -115,11 +115,9 @@ describe('custom message builder', () => {
     })
 
     it('raw JSON takes priority over card fields', () => {
-      const res = buildCustomMessage(
-        undefined,
-        '[{"cardId": "raw"}]',
-        { title: 'Ignored' }
-      )
+      const res = buildCustomMessage(undefined, '[{"cardId": "raw"}]', {
+        title: 'Ignored'
+      })
       expect(res.cardsV2).toEqual([{ cardId: 'raw' }])
     })
 

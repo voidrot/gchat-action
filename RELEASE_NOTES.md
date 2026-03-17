@@ -9,14 +9,14 @@ feature-rich messages to Google Chat spaces.
 
 Six built-in message formats, each rendering as a rich Google Chat Card:
 
-| Message Type | Description |
-| --- | --- |
-| `auto` | Automatically selects the best format based on the GitHub event |
-| `workflow_status` | Workflow name, status, repo, branch, actor, and run link |
-| `deployment_status` | Deployment environment, status, and deployer |
-| `pull_request` | PR title, state, author, and link |
-| `issue` | Issue title, state, author, and link |
-| `custom` | User-defined text, card fields, or raw Cards v2 JSON |
+| Message Type        | Description                                                     |
+| ------------------- | --------------------------------------------------------------- |
+| `auto`              | Automatically selects the best format based on the GitHub event |
+| `workflow_status`   | Workflow name, status, repo, branch, actor, and run link        |
+| `deployment_status` | Deployment environment, status, and deployer                    |
+| `pull_request`      | PR title, state, author, and link                               |
+| `issue`             | Issue title, state, author, and link                            |
+| `custom`            | User-defined text, card fields, or raw Cards v2 JSON            |
 
 ### Easy Custom Cards
 
@@ -48,7 +48,8 @@ extra context alongside any card:
     webhook_url: ${{ secrets.GCHAT_WEBHOOK_URL }}
     message_type: 'workflow_status'
     status: ${{ job.status }}
-    custom_text: 'Triggered by ${{ github.event_name }} on ${{ github.ref_name }}'
+    custom_text:
+      'Triggered by ${{ github.event_name }} on ${{ github.ref_name }}'
 ```
 
 ### Automatic Threading
@@ -62,32 +63,32 @@ using the run ID. You can override the thread key or disable threading entirely:
     webhook_url: ${{ secrets.GCHAT_WEBHOOK_URL }}
     message_type: 'workflow_status'
     status: ${{ job.status }}
-    thread_key: 'my-custom-thread'     # Override
-    disable_threading: 'true'          # Or disable entirely
+    thread_key: 'my-custom-thread' # Override
+    disable_threading: 'true' # Or disable entirely
 ```
 
 ## 📋 Inputs
 
-| Name | Description | Required | Default |
-| --- | --- | --- | --- |
-| `webhook_url` | Google Chat space webhook URL | Yes | — |
-| `message_type` | `auto`, `workflow_status`, `deployment_status`, `pull_request`, `issue`, `custom` | Yes | `auto` |
-| `status` | Status string (e.g. `success`, `failure`, `cancelled`) | No | — |
-| `custom_text` | Additional text (works with all message types) | No | — |
-| `custom_cards_v2` | Raw Cards v2 JSON (`custom` type only) | No | — |
-| `card_title` | Card header title (`custom` type) | No | — |
-| `card_subtitle` | Card header subtitle (`custom` type) | No | — |
-| `card_image_url` | Card header image URL (`custom` type) | No | — |
-| `card_text` | Card body text paragraph (`custom` type) | No | — |
-| `card_button_text` | Card button label (`custom` type) | No | — |
-| `card_button_url` | Card button URL (`custom` type) | No | — |
-| `thread_key` | Thread key override (defaults to run ID) | No | Run ID |
-| `disable_threading` | Disable threading entirely | No | `false` |
+| Name                | Description                                                                       | Required | Default |
+| ------------------- | --------------------------------------------------------------------------------- | -------- | ------- |
+| `webhook_url`       | Google Chat space webhook URL                                                     | Yes      | —       |
+| `message_type`      | `auto`, `workflow_status`, `deployment_status`, `pull_request`, `issue`, `custom` | Yes      | `auto`  |
+| `status`            | Status string (e.g. `success`, `failure`, `cancelled`)                            | No       | —       |
+| `custom_text`       | Additional text (works with all message types)                                    | No       | —       |
+| `custom_cards_v2`   | Raw Cards v2 JSON (`custom` type only)                                            | No       | —       |
+| `card_title`        | Card header title (`custom` type)                                                 | No       | —       |
+| `card_subtitle`     | Card header subtitle (`custom` type)                                              | No       | —       |
+| `card_image_url`    | Card header image URL (`custom` type)                                             | No       | —       |
+| `card_text`         | Card body text paragraph (`custom` type)                                          | No       | —       |
+| `card_button_text`  | Card button label (`custom` type)                                                 | No       | —       |
+| `card_button_url`   | Card button URL (`custom` type)                                                   | No       | —       |
+| `thread_key`        | Thread key override (defaults to run ID)                                          | No       | Run ID  |
+| `disable_threading` | Disable threading entirely                                                        | No       | `false` |
 
 ## 📤 Outputs
 
-| Name | Description |
-| --- | --- |
+| Name   | Description                         |
+| ------ | ----------------------------------- |
 | `time` | Timestamp when the message was sent |
 
 ## 🚀 Quick Start
