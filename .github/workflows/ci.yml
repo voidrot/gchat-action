@@ -57,7 +57,7 @@ jobs:
         id: test-action
         uses: ./
         with:
-          webhook_url: https://chat.googleapis.com/v1/spaces/XXXX/messages?key=XXXX&token=XXXX
+          webhook_url: ${{ secrets.WEBHOOK_URL }}
 
       - name: Print Output
         id: output
