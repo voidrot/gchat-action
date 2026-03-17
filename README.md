@@ -203,7 +203,7 @@ it to add extra context alongside any card message:
       'Triggered by ${{ github.event_name }} on ${{ github.ref_name }}'
 ```
 
-The text appears alongside the card in the Google Chat message.
+The text appears at the top of the card in the Google Chat message.
 
 ## Inputs
 

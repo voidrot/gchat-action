@@ -71,8 +71,14 @@ export async function run(): Promise<void> {
     }
 
     // Allow custom_text on any message type (custom type handles it internally)
-    if (customText && messageType !== 'custom') {
-      payload.text = customText
+    // Google Chat webhooks ignore top-level `text` when cardsV2 is present,
+    // so we inject it as a textParagraph widget inside the card.
+    if (customText && messageType !== 'custom' && payload.cardsV2?.length) {
+      const card = payload.cardsV2[0].card
+      const customSection = {
+        widgets: [{ textParagraph: { text: customText } }]
+      }
+      card.sections = [customSection, ...(card.sections || [])]
     }
 
     await sendMessage(webhookUrl, payload, threadKey, disableThreading)
