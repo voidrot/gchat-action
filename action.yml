@@ -1,4 +1,4 @@
-name: 'Google Chat Action'
+name: 'Google Chat Card Action'
 description: 'Send feature-rich messages to Google Chat from GitHub Actions'
 author: 'voidrot'
 
